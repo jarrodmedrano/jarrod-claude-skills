@@ -12,7 +12,15 @@ In any project where you want to use these skills:
 npm install @jarrodmedrano/claude-skills
 ```
 
-The skills will automatically be copied to your project's `.claude/skills/` directory during installation.
+The skills will automatically be copied to your project's `.claude/skills/` and `.claude/commands/` directories during installation.
+
+**If the automatic installation doesn't work** (e.g., if you used `npm install --ignore-scripts`), you can manually install the skills:
+
+```bash
+npx claude-skills install
+```
+
+This will copy all skills and commands to the appropriate directories in your project.
 
 ### Use as local directory
 
