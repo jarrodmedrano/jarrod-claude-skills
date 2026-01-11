@@ -23,6 +23,8 @@
   "files": [
     ".claude/skills/**/*",
     ".claude/commands/**/*",
+    ".claude/agents/**/*",
+    "templates/**/*",
     "scripts/**/*",
     "bin/**/*",
     "README.md"

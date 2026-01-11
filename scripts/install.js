@@ -38,8 +38,10 @@ function copySkills() {
 
   const skillsTargetDir = path.join(projectRoot, '.claude', 'skills');
   const commandsTargetDir = path.join(projectRoot, '.claude', 'commands');
+  const agentsTargetDir = path.join(projectRoot, '.claude', 'agents');
   const skillsSourceDir = path.join(packageRoot, '.claude', 'skills');
   const commandsSourceDir = path.join(packageRoot, '.claude', 'commands');
+  const agentsSourceDir = path.join(packageRoot, '.claude', 'agents');
 
   // Create .claude directories if they don't exist
   if (!fs.existsSync(skillsTargetDir)) {
@@ -52,7 +54,12 @@ function copySkills() {
     console.log('✓ Created .claude/commands directory');
   }
 
-  // Copy skills and commands
+  if (!fs.existsSync(agentsTargetDir)) {
+    fs.mkdirSync(agentsTargetDir, { recursive: true });
+    console.log('✓ Created .claude/agents directory');
+  }
+
+  // Copy skills, commands, and agents
   try {
     if (fs.existsSync(skillsSourceDir)) {
       copyRecursive(skillsSourceDir, skillsTargetDir);
@@ -62,6 +69,11 @@ function copySkills() {
     if (fs.existsSync(commandsSourceDir)) {
       copyRecursive(commandsSourceDir, commandsTargetDir);
       console.log(`✓ Commands copied to ${commandsTargetDir}`);
+    }
+
+    if (fs.existsSync(agentsSourceDir)) {
+      copyRecursive(agentsSourceDir, agentsTargetDir);
+      console.log(`✓ Agents copied to ${agentsTargetDir}`);
     }
 
     console.log('\n✓ Claude Code skills installed successfully!');
@@ -74,6 +86,9 @@ function copySkills() {
     console.log('  /code-review    - Code review workflows');
     console.log('  /design-review  - Design review workflows');
     console.log('  /security-review - Security review workflows');
+    console.log('\nAvailable agents:');
+    console.log('  design-review        - Design review subagent');
+    console.log('  pragmatic-code-review - Code review subagent');
     console.log('\nTo update later, run: npm run update-skills');
   } catch (error) {
     console.error('Error copying skills:', error.message);

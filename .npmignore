@@ -5,6 +5,7 @@ node_modules/
 .env
 .env.local
 
-# Keep the skills and commands - we want to publish these
+# Keep the skills, commands, and agents - we want to publish these
 !.claude/skills/
 !.claude/commands/
+!.claude/agents/
