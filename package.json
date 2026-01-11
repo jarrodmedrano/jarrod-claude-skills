@@ -1,0 +1,40 @@
+{
+  "name": "@jarrodmedrano/claude-skills",
+  "version": "1.0.0",
+  "description": "Reusable Claude Code skills for web development projects",
+  "main": "index.js",
+  "bin": {
+    "claude-skills": "./bin/cli.js"
+  },
+  "scripts": {
+    "postinstall": "node scripts/install.js",
+    "update-skills": "node scripts/update.js"
+  },
+  "keywords": [
+    "claude-code",
+    "claude",
+    "skills",
+    "web-development",
+    "scaffolding",
+    "project-setup"
+  ],
+  "author": "Jarrod Medrano",
+  "license": "MIT",
+  "files": [
+    ".claude/skills/**/*",
+    "scripts/**/*",
+    "bin/**/*",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jarrodmedrano/jarrod-claude-skills.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jarrodmedrano/jarrod-claude-skills/issues"
+  },
+  "homepage": "https://github.com/jarrodmedrano/jarrod-claude-skills#readme"
+}

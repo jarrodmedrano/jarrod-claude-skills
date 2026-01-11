@@ -1,0 +1,9 @@
+# Don't publish these to npm
+.DS_Store
+node_modules/
+*.log
+.env
+.env.local
+
+# Keep the skills - we want to publish these
+!.claude/
