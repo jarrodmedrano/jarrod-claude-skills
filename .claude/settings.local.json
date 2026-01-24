@@ -4,7 +4,8 @@
       "Bash(tree:*)",
       "Bash(chmod:*)",
       "Skill(superpowers:brainstorming)",
-      "Skill(superpowers:brainstorming:*)"
+      "Skill(superpowers:brainstorming:*)",
+      "Bash(python /Users/jarrodmedrano/.claude/skills/skill-creator/scripts/init_skill.py:*)"
     ]
   }
 }
