@@ -17,6 +17,8 @@ Located in `~/.claude/agents/`:
 | e2e-runner | E2E testing | Critical user flows |
 | refactor-cleaner | Dead code cleanup | Code maintenance |
 | doc-updater | Documentation | Updating docs |
+| frontend-performance-reviewer | Frontend performance analysis | Slow page loads (>3s), UI lag, performance optimization, production validation |
+| visual-debugger | Visual debugging with browser automation | Test UI elements, verify functionality, check responsive design, debug layout issues |
 
 ## Immediate Agent Usage
 
