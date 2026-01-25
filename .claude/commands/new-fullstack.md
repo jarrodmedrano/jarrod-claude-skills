@@ -35,15 +35,23 @@ When this skill is invoked:
    - Set up proxy configuration
 
    **Monorepo**:
-   - Create monorepo structure:
+   - Create monorepo structure (separate apps from component libraries):
      ```
      {project-name}/
        apps/
-         frontend/    (React + Vite)
-         backend/     (Express)
+         web/              # Application code (React + Vite)
+         api/              # Backend application (Express)
        packages/
-         shared/      (shared TypeScript types)
-       package.json   (workspace config)
+         ui/               # Shared component library with Storybook
+           src/
+             components/
+             index.ts
+           .storybook/
+           package.json
+         shared/           # Shared TypeScript types and utilities
+           src/
+           package.json
+       package.json        # Workspace config
      ```
    - Set up npm workspaces or pnpm workspace
 
@@ -143,9 +151,212 @@ When this skill is invoked:
    - Error handling
    - Logging setup
 
-7. Initialize git repository with appropriate .gitignore
+7. **Set up ESLint with Airbnb style guide** (MANDATORY):
+   - Install ESLint and Airbnb config:
+     ```bash
+     npm install -D eslint eslint-config-airbnb eslint-config-airbnb-typescript \
+       @typescript-eslint/eslint-plugin @typescript-eslint/parser \
+       eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react \
+       eslint-plugin-react-hooks
+     ```
+   - Create `.eslintrc.cjs` (CommonJS for ESLint config only):
+     ```javascript
+     module.exports = {
+       root: true,
+       env: { browser: true, es2022: true, node: true },
+       extends: [
+         'airbnb',
+         'airbnb-typescript',
+         'airbnb/hooks',
+         'plugin:@typescript-eslint/recommended',
+       ],
+       parser: '@typescript-eslint/parser',
+       parserOptions: {
+         ecmaVersion: 'latest',
+         sourceType: 'module',
+         project: './tsconfig.json',
+       },
+       plugins: ['@typescript-eslint', 'react', 'react-hooks'],
+       rules: {
+         'react/react-in-jsx-scope': 'off',
+         'react/function-component-definition': ['error', {
+           namedComponents: 'function-declaration',
+           unnamedComponents: 'arrow-function',
+         }],
+         'import/prefer-default-export': 'off',
+       },
+     };
+     ```
 
-8. Create README with:
+8. **Set up Husky with pre-commit hook** (MANDATORY):
+   - Install Husky and lint-staged:
+     ```bash
+     npm install -D husky lint-staged
+     npx husky init
+     ```
+   - Create `.husky/pre-commit`:
+     ```bash
+     npx lint-staged
+     ```
+   - Add to `package.json`:
+     ```json
+     {
+       "lint-staged": {
+         "*.{js,jsx,ts,tsx}": ["eslint --fix", "git add"]
+       }
+     }
+     ```
+
+9. **Ensure TypeScript uses ES modules** (MANDATORY):
+   - Set `"type": "module"` in `package.json`
+   - Configure `tsconfig.json`:
+     ```json
+     {
+       "compilerOptions": {
+         "module": "ESNext",
+         "moduleResolution": "bundler",
+         "target": "ES2022",
+         "esModuleInterop": true,
+         "allowSyntheticDefaultImports": true
+       }
+     }
+     ```
+   - Use `.js` extensions in imports for Node.js code, or configure bundler appropriately
+
+10. **Set up Vitest for testing** (MANDATORY):
+    - Install Vitest and testing libraries:
+      ```bash
+      # For monorepos, install at root or in each package
+      npm install -D vitest @vitest/ui @vitest/coverage-v8 \
+        @testing-library/react @testing-library/jest-dom jsdom
+      ```
+    - Create `vitest.config.ts`:
+      ```typescript
+      import { defineConfig } from 'vitest/config'
+      import react from '@vitejs/plugin-react'
+
+      export default defineConfig({
+        plugins: [react()],
+        test: {
+          environment: 'jsdom',
+          globals: true,
+          setupFiles: ['./src/test/setup.ts'],
+          coverage: {
+            provider: 'v8',
+            reporter: ['text', 'json', 'html'],
+          },
+        },
+      })
+      ```
+    - Create `src/test/setup.ts`:
+      ```typescript
+      import '@testing-library/jest-dom'
+      ```
+    - Add scripts to `package.json`:
+      ```json
+      {
+        "scripts": {
+          "test": "vitest",
+          "test:ui": "vitest --ui",
+          "test:coverage": "vitest run --coverage"
+        }
+      }
+      ```
+    - **Monorepo note**: Use `--filter` flag to run tests in specific packages:
+      ```bash
+      npm run test --workspace=packages/ui
+      # or with pnpm
+      pnpm --filter @project/ui test
+      ```
+
+11. **Set up Storybook for component library** (MANDATORY):
+    - Install Storybook in the component library package (e.g., `packages/ui`):
+      ```bash
+      # Navigate to component library first
+      cd packages/ui
+      npx storybook@latest init --type react
+      ```
+    - Configure `.storybook/main.ts`:
+      ```typescript
+      import type { StorybookConfig } from '@storybook/react-vite'
+
+      const config: StorybookConfig = {
+        stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+        addons: [
+          '@storybook/addon-onboarding',
+          '@storybook/addon-essentials',
+          '@storybook/addon-interactions',
+          '@storybook/addon-a11y',
+        ],
+        framework: {
+          name: '@storybook/react-vite',
+          options: {},
+        },
+      }
+      export default config
+      ```
+    - Create story alongside each component:
+      ```
+      packages/ui/src/components/
+        Button/
+          Button.tsx
+          Button.styles.ts
+          Button.stories.tsx
+          Button.test.tsx
+          index.ts
+      ```
+    - Example story template (`Button.stories.tsx`):
+      ```typescript
+      import type { Meta, StoryObj } from '@storybook/react'
+      import { Button } from './Button'
+
+      const meta: Meta<typeof Button> = {
+        title: 'Components/Button',
+        component: Button,
+        tags: ['autodocs'],
+      }
+      export default meta
+
+      type Story = StoryObj<typeof Button>
+
+      export const Primary: Story = {
+        args: { variant: 'primary', children: 'Click me' },
+      }
+      ```
+    - Add scripts to component library `package.json`:
+      ```json
+      {
+        "scripts": {
+          "storybook": "storybook dev -p 6006",
+          "build-storybook": "storybook build"
+        }
+      }
+      ```
+
+12. **Separate application from component library** (MANDATORY):
+    - Component library (`packages/ui`):
+      * Contains only reusable, presentational components
+      * No business logic or API calls
+      * Each component has: `.tsx`, `.styles.ts`, `.stories.tsx`, `.test.tsx`
+      * Exports components via barrel file (`index.ts`)
+    - Application (`apps/web` or `apps/api`):
+      * Contains business logic, routing, API integration
+      * Imports components from `@project/ui`
+      * Feature-based organization for app-specific code
+    - Configure workspace dependencies:
+      ```json
+      // apps/web/package.json
+      {
+        "dependencies": {
+          "@project/ui": "workspace:*",
+          "@project/shared": "workspace:*"
+        }
+      }
+      ```
+
+13. Initialize git repository with appropriate .gitignore
+
+14. Create README with:
    - Project structure
    - Setup instructions
    - Development commands
