@@ -62,6 +62,7 @@ Create a full-stack application with:
 - T3 Stack (Next.js + tRPC + Prisma)
 - MERN Stack
 - Monorepo (separate frontend/backend)
+- **Solito** (Expo + Next.js - Universal app for web + mobile)
 
 **Example:**
 ```
