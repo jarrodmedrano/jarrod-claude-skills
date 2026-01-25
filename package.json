@@ -1,6 +1,6 @@
 {
   "name": "@jarrodmedrano/claude-skills",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "Reusable Claude Code skills for web development projects",
   "main": "index.js",
   "bin": {
