@@ -21,7 +21,19 @@ This skill enables:
 4. **Console monitoring** - Capture JavaScript errors and warnings
 5. **Authentication support** - Handle login flows and authenticated sessions
 
+
+## Prerequisites
+
+Before using this skill, verify Playwright MCP tools are available:
+
+1. Check if `mcp__playwright__browser_navigate` tool is available
+2. If NOT available, the Playwright MCP server needs to be enabled:
+   - Tell the user: "The Playwright MCP server is not currently enabled. To use visual debugging, please enable the Playwright plugin by running: `/plugins` and enabling 'playwright'"
+   - STOP execution until the plugin is enabled
+3. If available, proceed with testing
+
 ## Workflow
+
 
 ### 1. Initialize Browser Session
 
